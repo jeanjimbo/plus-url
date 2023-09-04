@@ -52,19 +52,13 @@ def authorize_self(client_id='None', client_secret='None'):
   credentials_file = 'plus_auth.dat'
 
   storage = Storage(credentials_file)
-  if os.path.exists(credentials_file):
-    credentials = storage.get()
-  else:
-    credentials = run(flow, storage)
-
-  return credentials
+  return (storage.get() if os.path.exists(credentials_file) else run(
+      flow, storage))
 
 def build_service(credentials, http, api_key=None):
   if ( credentials != None ):
     http = credentials.authorize(http)
-  service = apiclient.discovery.build('plus', 'v1', http=http, developerKey=api_key)
-
-  return service
+  return apiclient.discovery.build('plus', 'v1', http=http, developerKey=api_key)
 
 
 def main():
